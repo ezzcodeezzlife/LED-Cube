@@ -1,5 +1,6 @@
 # Arduino IDE konfigurieren
 
 _Boardverwalter hinzufügen:_
-* URL: https://arduino.esp8266.com/stable/package_esp8266com_index.json
-* Paket: ESP8266
+* URL: https://dl.espressif.com/dl/package_esp32_index.json
+* Paket: ESP32
+* Board: WEMOS D1 MINI ESP32
