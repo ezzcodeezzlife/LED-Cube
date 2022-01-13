@@ -32,12 +32,12 @@ function init3D(){
 
   // Materials of each face
   var cubeMaterials = [
-    new THREE.MeshBasicMaterial({color:0x03045e}),
-    new THREE.MeshBasicMaterial({color:0x023e8a}),
-    new THREE.MeshBasicMaterial({color:0x0077b6}),
-    new THREE.MeshBasicMaterial({color:0x03045e}),
-    new THREE.MeshBasicMaterial({color:0x023e8a}),
-    new THREE.MeshBasicMaterial({color:0x0077b6}),
+    new THREE.MeshBasicMaterial({color:0x01A9DB}),
+    new THREE.MeshBasicMaterial({color:0x00BFFF}),
+    new THREE.MeshBasicMaterial({color:0x0174DF}),
+    new THREE.MeshBasicMaterial({color:0x01A9DB}),
+    new THREE.MeshBasicMaterial({color:0x00BFFF}),
+    new THREE.MeshBasicMaterial({color:0x0174DF}),
   ];
 
   const material = new THREE.MeshFaceMaterial(cubeMaterials);

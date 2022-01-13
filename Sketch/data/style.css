@@ -19,40 +19,43 @@ body {
 }
 .topnav {
   overflow: hidden;
-  background-color: #003366;
-  color: #FFD43B;
+  background-color: #00BFFF;
+  color: #fff;
   font-size: 1rem;
 }
 .content {
   padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
 }
 .card {
   background-color: white;
   box-shadow: 2px 2px 12px 1px rgba(140,140,140,.5);
+  margin: 20px;
+  padding: 20px;
 }
 .card-title {
-  color:#003366;
+  color:#00BFFF;
   font-weight: bold;
 }
 .cards {
-  max-width: 800px;
-  margin: 0 auto;
-  display: grid; grid-gap: 2rem;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  min-width: 600px;
+  display: flex;
+  flex-direction: column;
 }
 .reading {
   font-size: 1.2rem;
 }
 .cube-content{
-  width: 100%;
+  width: 300px;
   background-color: white;
-  height: 300px; margin: auto;
-  padding-top:2%;
+  height: 300px;
+  margin: auto;
 }
 #reset{
   border: none;
   color: #FEFCFB;
-  background-color: #003366;
+  background-color: #00BFFF;
   padding: 10px;
   text-align: center;
   display: inline-block;
@@ -62,7 +65,7 @@ body {
 #resetX, #resetY, #resetZ{
   border: none;
   color: #FEFCFB;
-  background-color: #003366;
+  background-color: #00BFFF;
   padding-top: 10px;
   padding-bottom: 10px;
   text-align: center;
