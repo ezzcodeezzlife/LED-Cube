@@ -24,7 +24,7 @@ body {
   font-size: 1rem;
 }
 .content {
-  padding: 20px;
+  padding: 50px;
   display: flex;
   flex-wrap: wrap;
 }
@@ -39,19 +39,22 @@ body {
   font-weight: bold;
 }
 .cards {
-  min-width: 600px;
+  min-width: 400px;
   display: flex;
   flex-direction: column;
 }
 .reading {
   font-size: 1.2rem;
 }
+
 .cube-content{
   width: 300px;
   background-color: white;
   height: 300px;
-  margin: auto;
+  margin: 150px 500px 200px 500px;
+  box-sizing: border-box;
 }
+
 #reset{
   border: none;
   color: #FEFCFB;
