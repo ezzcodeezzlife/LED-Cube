@@ -26,6 +26,8 @@ function init3D(){
 
   document.getElementById('3Dcube').appendChild(renderer.domElement);
 
+  document.getElementById('3Dcube').style.width = "600px";
+
   // Create a geometry for cube
   const geometry = new THREE.BoxGeometry(5, 5, 5);
 
@@ -44,7 +46,7 @@ function init3D(){
  
   scene.add(cube);
 
-  camera.position.z = 5;
+  camera.position.z = 10;
   renderer.render(scene, camera);
 }
 
