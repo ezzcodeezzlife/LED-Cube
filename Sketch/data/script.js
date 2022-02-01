@@ -1,7 +1,6 @@
 /*
   Rui Santos
   Complete project details at https://RandomNerdTutorials.com/esp32-mpu-6050-web-server/
-
   Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files.
   The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
@@ -27,23 +26,24 @@ function init3D(){
 
   document.getElementById('3Dcube').appendChild(renderer.domElement);
 
-  // Create a geometry
+  // Create a geometry for cube
   const geometry = new THREE.BoxGeometry(5, 5, 5);
 
-  // Materials of each face
-  var cubeMaterials = [
-    new THREE.MeshBasicMaterial({color:0x01A9DB}),
-    new THREE.MeshBasicMaterial({color:0x00BFFF}),
-    new THREE.MeshBasicMaterial({color:0x0174DF}),
-    new THREE.MeshBasicMaterial({color:0x01A9DB}),
-    new THREE.MeshBasicMaterial({color:0x00BFFF}),
-    new THREE.MeshBasicMaterial({color:0x0174DF}),
-  ];
+  //textures
+  const loader = new THREE.CubeTextureLoader();
+  loader.setPath( 'textures/' );
 
-  const material = new THREE.MeshFaceMaterial(cubeMaterials);
+  const textureCube = loader.load( [
+    'px.png', 'nx.png',
+    'py.png', 'ny.png',
+    'pz.png', 'nz.png'
+  ] );
 
+  const material = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: textureCube } );
   cube = new THREE.Mesh(geometry, material);
+ 
   scene.add(cube);
+
   camera.position.z = 5;
   renderer.render(scene, camera);
 }
@@ -62,6 +62,12 @@ window.addEventListener('resize', onWindowResize, false);
 
 // Create the 3D representation
 init3D();
+
+function render() {
+  renderer.render(scene, camera);
+  requestAnimationFrame(render);
+}
+requestAnimationFrame(render);
 
 // Create events for the sensor readings
 if (!!window.EventSource) {
