@@ -48,10 +48,10 @@ body {
 }
 
 .cube-content{
-  width: 300px;
+  width: 600px;
   background-color: white;
-  height: 300px;
-  margin: 150px 500px 200px 500px;
+  height: 600px;
+  box-shadow: 2px 2px 12px 1px rgba(140,140,140,.5);
   box-sizing: border-box;
 }
 

@@ -124,12 +124,6 @@ String getAccReadings() {
   return accString;
 }
 
-String getTemperature(){
-  mpu.getEvent(&a, &g, &temp);
-  temperature = temp.temperature;
-  return String(temperature);
-}
-
 void setup() {
   Serial.begin(115200);
   initWiFi();
@@ -186,13 +180,10 @@ void loop() {
     lastTime = millis();
   }
   if ((millis() - lastTimeAcc) > accelerometerDelay) {
+    String accReadings = getAccReadings();
     // Send Events to the Web Server with the Sensor Readings
-    events.send(getAccReadings().c_str(),"accelerometer_readings",millis());
+    events.send(accReadings.c_str(),"accelerometer_readings",millis());
     lastTimeAcc = millis();
   }
-  if ((millis() - lastTimeTemperature) > temperatureDelay) {
-    // Send Events to the Web Server with the Sensor Readings
-    events.send(getTemperature().c_str(),"temperature_reading",millis());
-    lastTimeTemperature = millis();
-  }
+  
 }
