@@ -1,14 +1,3 @@
-/*********
-  Rui Santos
-  Complete project details at https://RandomNerdTutorials.com/esp32-mpu-6050-web-server/
-  
-  Permission is hereby granted, free of charge, to any person obtaining a copy
-  of this software and associated documentation files.
-  
-  The above copyright notice and this permission notice shall be included in all
-  copies or substantial portions of the Software.
-*********/
-
 #include <Arduino.h>
 #include <WiFi.h>
 #include <AsyncTCP.h>
@@ -33,25 +22,35 @@ JSONVar readings;
 
 // Timer variables
 unsigned long lastTime = 0;  
-unsigned long lastTimeTemperature = 0;
 unsigned long lastTimeAcc = 0;
+unsigned long movingStartTime = 0;
+unsigned long movingStopTime = 0;
 unsigned long gyroDelay = 10;
-unsigned long temperatureDelay = 1000;
 unsigned long accelerometerDelay = 200;
+unsigned long movingStartDelay = 1000;
+unsigned long movingStopDelay = 3000;
 
-// Create a sensor object
+// MPU6050 object
 Adafruit_MPU6050 mpu;
-
 sensors_event_t a, g, temp;
 
+/// Readings
 float gyroX, gyroY, gyroZ;
 float accX, accY, accZ;
-float temperature;
 
-//Gyroscope sensor deviation
-float gyroXerror = 0.07;
-float gyroYerror = 0.03;
-float gyroZerror = 0.01;
+// Gyroscope sensor deviation
+float gyroXerror = -0.0693;
+float gyroYerror = -0.0126;
+float gyroZerror = -0.0096;
+
+// Acceleration error
+float accXerror = 0.083;
+float accYerror = -0.0916;
+float accZerror = -1.471;
+
+// Movement detection states
+boolean isMoving = false;
+boolean wasMoving = false;
 
 // Init MPU6050
 void initMPU(){
@@ -111,17 +110,60 @@ String getGyroReadings(){
   return jsonString;
 }
 
-String getAccReadings() {
+float getAccXReading() {
   mpu.getEvent(&a, &g, &temp);
-  // Get current acceleration values
-  accX = a.acceleration.x;
-  accY = a.acceleration.y;
-  accZ = a.acceleration.z;
-  readings["accX"] = String(accX);
-  readings["accY"] = String(accY);
-  readings["accZ"] = String(accZ);
-  String accString = JSON.stringify (readings);
+  return a.acceleration.x - accXerror;
+}
+
+float getAccYReading() {
+  mpu.getEvent(&a, &g, &temp);
+  return a.acceleration.y - accYerror;
+}
+
+float getAccZReading() {
+  mpu.getEvent(&a, &g, &temp);
+  return a.acceleration.z - accZerror;
+}
+
+String getAccReadingsJson() {
+  readings["accX"] = String(getAccXReading());
+  readings["accY"] = String(getAccYReading());
+  readings["accZ"] = String(getAccZReading());
+  String accString = JSON.stringify(readings);
   return accString;
+}
+
+boolean detectMovement() {
+  float accX = getAccXReading();
+  float accY = getAccYReading();
+  float accZ = getAccZReading();
+  
+  boolean accDetected = false;
+  if (abs(accX) > 10 || abs(accY) > 10 || abs(accZ) > 10) {
+    accDetected = true;
+  }
+  
+  if (accDetected) {
+    if ((millis() - movingStartTime) > movingStartDelay) {
+      movingStartTime = millis();
+      movingStopTime = millis();
+      if (!isMoving) {
+        isMoving = true;
+        Serial.printf("Started movement. ");
+        Serial.printf("Acceleration: x=%f y=%f z=%f\n", accX, accY, accZ);  
+      }
+    }
+  } else {
+    if ((millis() - movingStopTime) > movingStopDelay) {
+      movingStartTime = millis();
+      movingStopTime = millis();
+      if (isMoving) {
+        isMoving = false;
+        Serial.printf("Stopped movement. ");
+        Serial.printf("Acceleration: x=%f y=%f z=%f\n", accX, accY, accZ); 
+      }
+    }
+  }
 }
 
 void setup() {
@@ -176,14 +218,18 @@ void setup() {
 void loop() {
   if ((millis() - lastTime) > gyroDelay) {
     // Send Events to the Web Server with the Sensor Readings
-    events.send(getGyroReadings().c_str(),"gyro_readings",millis());
+    events.send(getGyroReadings().c_str(),"gyro_readings", millis());
     lastTime = millis();
   }
   if ((millis() - lastTimeAcc) > accelerometerDelay) {
-    String accReadings = getAccReadings();
     // Send Events to the Web Server with the Sensor Readings
-    events.send(accReadings.c_str(),"accelerometer_readings",millis());
+    events.send(getAccReadingsJson().c_str(),"accelerometer_readings", millis());
     lastTimeAcc = millis();
+
+    detectMovement();
+    if (wasMoving != isMoving) {
+      wasMoving = isMoving;
+      events.send(String(isMoving).c_str(),"accelerometer_movement", millis());
+    }
   }
-  
 }

@@ -111,6 +111,12 @@ if (!!window.EventSource) {
     document.getElementById("accY").innerHTML = obj.accY;
     document.getElementById("accZ").innerHTML = obj.accZ;
   }, false);
+
+  source.addEventListener('accelerometer_movement', function(e) {
+    console.log("accelerometer_movement", e.data);
+    var mov = e.data;
+    document.getElementById("accMov").innerHTML = mov;
+  }, false);
 }
 
 function resetPosition(element){
