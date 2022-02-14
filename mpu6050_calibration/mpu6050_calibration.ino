@@ -12,17 +12,17 @@ float accX, accY, accZ;
 int ATTEMPTS = 200;
 
 // Gyroscope deviation
-float gyroXerror = -0.0693;
-float gyroYerror = -0.0126;
-float gyroZerror = -0.0096;
+float gyroXerror = -0.070218;
+float gyroYerror = -0.011311;
+float gyroZerror = -0.011546;
 
 // Acceleration deviation
 float accXtarget = 0.0;
 float accYtarget = 0.0;
 float accZtarget = 9.81;
-float accXerror = 0.083;
-float accYerror = -0.0916;
-float accZerror = -1.471;
+float accXerror = 0.273466;
+float accYerror = 0.023643;
+float accZerror = -1.416153;
 
 // Sums
 float gyroXsum = 0;

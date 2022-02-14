@@ -8,8 +8,8 @@
 #include "SPIFFS.h"
 
 // Replace with your network credentials
-const char* ssid = "FRITZ!Box Gastzugang";
-const char* password = "gastzugang";
+const char* ssid = "macbookpro13";
+const char* password = "marvinsmacbookpro";
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
@@ -39,14 +39,25 @@ float gyroX, gyroY, gyroZ;
 float accX, accY, accZ;
 
 // Gyroscope sensor deviation
-float gyroXerror = -0.0693;
-float gyroYerror = -0.0126;
-float gyroZerror = -0.0096;
+float gyroXerror = -0.070218;
+float gyroYerror = -0.011311;
+float gyroZerror = -0.011546;
 
-// Acceleration error
-float accXerror = 0.083;
-float accYerror = -0.0916;
-float accZerror = -1.471;
+// Accelerometer deviation
+float accXtarget = 0.0;
+float accYtarget = 0.0;
+float accZtarget = 9.81;
+float accXerror = 0.273466;
+float accYerror = 0.023643;
+float accZerror = -1.416153;
+
+// Calibration temp sums
+float gyroXsum = 0;
+float gyroYsum = 0;
+float gyroZsum = 0;
+float accXsum = 0;
+float accYsum = 0;
+float accZsum = 0;
 
 // Movement detection states
 boolean isMoving = false;
@@ -84,27 +95,43 @@ void initWiFi() {
   Serial.println(WiFi.localIP());
 }
 
-String getGyroReadings(){
+float getGyroXReading() {
   mpu.getEvent(&a, &g, &temp);
-
+  
   float gyroX_temp = g.gyro.x;
   if(abs(gyroX_temp) > gyroXerror)  {
     gyroX += gyroX_temp/50.00;
   }
   
+  return gyroX - gyroXerror;
+}
+
+float getGyroYReading() {
+  mpu.getEvent(&a, &g, &temp);
+
   float gyroY_temp = g.gyro.y;
   if(abs(gyroY_temp) > gyroYerror) {
     gyroY += gyroY_temp/70.00;
   }
+  
+  return gyroY - gyroYerror;
+}
+
+float getGyroZReading() {
+  mpu.getEvent(&a, &g, &temp);
 
   float gyroZ_temp = g.gyro.z;
   if(abs(gyroZ_temp) > gyroZerror) {
     gyroZ += gyroZ_temp/90.00;
   }
+  
+  return gyroZ - gyroZerror;
+}
 
-  readings["gyroX"] = String(gyroX);
-  readings["gyroY"] = String(gyroY);
-  readings["gyroZ"] = String(gyroZ);
+String getGyroReadings(){
+  readings["gyroX"] = String(getGyroXReading());
+  readings["gyroY"] = String(getGyroYReading());
+  readings["gyroZ"] = String(getGyroZReading());
 
   String jsonString = JSON.stringify(readings);
   return jsonString;
@@ -166,6 +193,42 @@ boolean detectMovement() {
   }
 }
 
+void calibrateGyroscope(int precision) {
+  Serial.printf("Doing %d gyro measurements\n", precision);
+  
+  for (int i = 0; i<precision; i++) {
+    float gyroXreading = getGyroXReading();
+    float gyroYreading = getGyroYReading();
+    float gyroZreading = getGyroZReading();
+    gyroXsum += gyroXreading;
+    gyroYsum += gyroYreading;
+    gyroZsum += gyroZreading;
+  }
+
+  gyroXerror = gyroXsum/precision;
+  gyroYerror = gyroYsum/precision;
+  gyroZerror = gyroZsum/precision;
+  Serial.printf("Gyroscope average deviation: x=%f y=%f z=%f\n", gyroXerror, gyroYerror, gyroZerror);
+}
+
+void calibrateAccelerometer(int precision) {
+  Serial.printf("Doing %d accelerometer measurements\n", precision);
+  
+  for (int i = 0; i<precision; i++) {
+    float accXreading = getAccXReading();
+    float accYreading = getAccYReading();
+    float accZreading = getAccZReading();
+    accXsum += accXreading;
+    accYsum += accYreading;
+    accZsum += accZreading;    
+  }
+
+  accXerror = accXsum/precision - accXtarget;
+  accYerror = accYsum/precision - accYtarget;
+  accZerror = accZsum/precision - accZtarget;
+  Serial.printf("Accelerometer average deviation: x=%f y=%f z=%f\n", accXerror , accYerror, accZerror); 
+}
+
 void setup() {
   Serial.begin(115200);
   initWiFi();
@@ -173,36 +236,36 @@ void setup() {
   initMPU();
 
   // Handle Web Server
-  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send(SPIFFS, "/index.html", "text/html");
   });
 
   server.serveStatic("/", SPIFFS, "/");
 
-  server.on("/reset", HTTP_GET, [](AsyncWebServerRequest *request){
+  server.on("/reset", HTTP_GET, [](AsyncWebServerRequest *request) {
     gyroX=0;
     gyroY=0;
     gyroZ=0;
     request->send(200, "text/plain", "OK");
   });
 
-  server.on("/resetX", HTTP_GET, [](AsyncWebServerRequest *request){
+  server.on("/resetX", HTTP_GET, [](AsyncWebServerRequest *request) {
     gyroX=0;
     request->send(200, "text/plain", "OK");
   });
 
-  server.on("/resetY", HTTP_GET, [](AsyncWebServerRequest *request){
+  server.on("/resetY", HTTP_GET, [](AsyncWebServerRequest *request) {
     gyroY=0;
     request->send(200, "text/plain", "OK");
   });
 
-  server.on("/resetZ", HTTP_GET, [](AsyncWebServerRequest *request){
+  server.on("/resetZ", HTTP_GET, [](AsyncWebServerRequest *request) {
     gyroZ=0;
     request->send(200, "text/plain", "OK");
   });
 
   // Handle Web Server Events
-  events.onConnect([](AsyncEventSourceClient *client){
+  events.onConnect([](AsyncEventSourceClient *client) {
     if(client->lastId()){
       Serial.printf("Client reconnected! Last message ID that it got is: %u\n", client->lastId());
     }
@@ -216,6 +279,9 @@ void setup() {
 }
 
 void loop() {
+  calibrateGyroscope(200);
+  calibrateAccelerometer(200);
+  
   if ((millis() - lastTime) > gyroDelay) {
     // Send Events to the Web Server with the Sensor Readings
     events.send(getGyroReadings().c_str(),"gyro_readings", millis());
