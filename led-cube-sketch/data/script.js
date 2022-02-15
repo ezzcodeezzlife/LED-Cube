@@ -66,7 +66,6 @@ window.addEventListener('resize', onWindowResize, false);
 init3D();
 
 function render() {
-  cube.rotation.x -=  0.01;
   renderer.render(scene, camera);
   requestAnimationFrame(render);
 }
