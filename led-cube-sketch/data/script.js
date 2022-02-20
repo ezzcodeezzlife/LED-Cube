@@ -125,3 +125,17 @@ function resetPosition(element){
   console.log(element.id);
   xhr.send();
 }
+
+function calibrateGyro(){
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "/calibrateGyro", true);
+  console.log("Calibrate gyro");
+  xhr.send();
+}
+
+function calibrateAcc(){
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "/calibrateAcc", true);
+  console.log("Calibrate acc");
+  xhr.send();
+}

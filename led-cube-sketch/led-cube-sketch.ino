@@ -235,6 +235,9 @@ void setup() {
   initSPIFFS();
   initMPU();
 
+  calibrateGyroscope(200);
+  calibrateAccelerometer(200);
+
   // Handle Web Server
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send(SPIFFS, "/index.html", "text/html");
@@ -264,6 +267,16 @@ void setup() {
     request->send(200, "text/plain", "OK");
   });
 
+  server.on("/calibrateGyro", HTTP_GET, [](AsyncWebServerRequest *request) {
+    calibrateGyroscope(200);
+    request->send(200, "text/plain", "OK");
+  });
+
+  server.on("/calibrateAcc", HTTP_GET, [](AsyncWebServerRequest *request) {
+    calibrateAccelerometer(200);
+    request->send(200, "text/plain", "OK");
+  });
+
   // Handle Web Server Events
   events.onConnect([](AsyncEventSourceClient *client) {
     if(client->lastId()){
@@ -279,8 +292,6 @@ void setup() {
 }
 
 void loop() {
-  calibrateGyroscope(200);
-  calibrateAccelerometer(200);
   
   if ((millis() - lastTime) > gyroDelay) {
     // Send Events to the Web Server with the Sensor Readings
