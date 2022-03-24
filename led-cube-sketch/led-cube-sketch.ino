@@ -160,7 +160,7 @@ String getAccReadingsJson() {
   return accString;
 }
 
-boolean detectMovement() {
+void detectMovement() {
   float accX = getAccXReading();
   float accY = getAccYReading();
   float accZ = getAccZReading();
