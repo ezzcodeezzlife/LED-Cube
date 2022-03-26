@@ -32,20 +32,20 @@ function init3D(){
   const geometry = new THREE.BoxGeometry(5, 5, 5);
 
   //textures
-  const loader = new THREE.CubeTextureLoader();
-  loader.setPath( 'textures/' );
-
-  const textureCube = loader.load( [
-    'px.png', 'nx.png',
-    'py.png', 'ny.png',
-    'pz.png', 'nz.png'
-  ] );
-
-  const material = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: textureCube } );
-  cube = new THREE.Mesh(geometry, material);
+  const loader = new THREE.TextureLoader();
+  const cubeMaterials = [
+      new THREE.MeshBasicMaterial({ map: loader.load('textures/nx.png') }), //right side
+      new THREE.MeshBasicMaterial({ map: loader.load('textures/ny.png')}), //left side
+      new THREE.MeshBasicMaterial({ map: loader.load('textures/nz.png')}), //top side
+      new THREE.MeshBasicMaterial({ map: loader.load('textures/px.png')}), //bottom side
+      new THREE.MeshBasicMaterial({ map: loader.load('textures/py.png')}), //front side
+      new THREE.MeshBasicMaterial({ map: loader.load('textures/pz.png')}), //back side
+  ];
+ 
+  cube = new THREE.Mesh(geometry, cubeMaterials);
  
   scene.add(cube);
-
+  
   camera.position.z = 10;
   renderer.render(scene, camera);
 }
