@@ -8,8 +8,8 @@
 #include "SPIFFS.h"
 
 // Replace with your network credentials
-const char* ssid = "macbookpro13";
-const char* password = "marvinsmacbookpro";
+const char* ssid = "FRITZ!Box Gastzugang";
+const char* password = "gastzugang";
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
@@ -307,6 +307,13 @@ void loop() {
     if (wasMoving != isMoving) {
       wasMoving = isMoving;
       events.send(String(isMoving).c_str(),"accelerometer_movement", millis());
+
+      if (!isMoving) {
+        // roll the dice
+        int randomNumber = random(5) + 1;
+        Serial.printf("Random number: %d \n", randomNumber);
+      }
+      
     }
   }
 }
