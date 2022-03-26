@@ -111,11 +111,31 @@ if (!!window.EventSource) {
     document.getElementById("accY").innerHTML = obj.accY;
     document.getElementById("accZ").innerHTML = obj.accZ;
   }, false);
+
+  source.addEventListener('accelerometer_movement', function(e) {
+    console.log("accelerometer_movement", e.data);
+    var mov = e.data;
+    document.getElementById("accMov").innerHTML = mov;
+  }, false);
 }
 
 function resetPosition(element){
   var xhr = new XMLHttpRequest();
   xhr.open("GET", "/"+element.id, true);
   console.log(element.id);
+  xhr.send();
+}
+
+function calibrateGyro(){
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "/calibrateGyro", true);
+  console.log("Calibrate gyro");
+  xhr.send();
+}
+
+function calibrateAcc(){
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "/calibrateAcc", true);
+  console.log("Calibrate acc");
   xhr.send();
 }
