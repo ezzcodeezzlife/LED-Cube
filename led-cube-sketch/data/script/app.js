@@ -7,12 +7,19 @@
 
 let scene, camera, rendered, cube;
 
+let players = ["Lara", "Ben", "Fabian", "Marvin"];
+let currentPlayer = 0;
+
 function parentWidth(elem) {
-  return elem.parentElement.clientWidth;
+  return elem.parentElement.clientWidth - 40;
 }
 
 function parentHeight(elem) {
-  return elem.parentElement.clientHeight;
+  return elem.parentElement.clientHeight - 40;
+}
+
+function init() {
+  document.getElementById("current-player").innerHTML = players[currentPlayer];
 }
 
 function init3D(){
@@ -26,8 +33,8 @@ function init3D(){
 
   document.getElementById('3Dcube').appendChild(renderer.domElement);
 
-  document.getElementById('3Dcube').style.width = "600px";
-
+  // document.getElementById('3Dcube').style.width = "600px";
+  
   // Create a geometry for cube
   const geometry = new THREE.BoxGeometry(5, 5, 5);
 
@@ -63,6 +70,7 @@ function onWindowResize(){
 window.addEventListener('resize', onWindowResize, false);
 
 // Create the 3D representation
+init();
 init3D();
 
 function render() {
@@ -117,6 +125,15 @@ if (!!window.EventSource) {
     var mov = e.data;
     document.getElementById("accMov").innerHTML = mov;
   }, false);
+
+  source.addEventListener('dice_result', function(e) {
+    console.log("dice_result", e.data);
+    var result = e.data;
+    addDiceResult(currentPlayer, result);
+    let playerCount = players.length;
+    currentPlayer = (currentPlayer+1) % playerCount;
+    document.getElementById("current-player").innerHTML = players[currentPlayer];
+  }, false);
 }
 
 function resetPosition(element){
@@ -138,4 +155,9 @@ function calibrateAcc(){
   xhr.open("GET", "/calibrateAcc", true);
   console.log("Calibrate acc");
   xhr.send();
+}
+
+function addDiceResult(currentPlayer, result) {
+  let row = "<tr><td>" + players[currentPlayer] + "</td><td>" + result + "</td></tr>";
+  document.getElementById("tbody").innerHTML = row + document.getElementById("tbody").innerHTML;
 }

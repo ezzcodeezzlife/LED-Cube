@@ -12,7 +12,7 @@ html {
   text-align: center;
 }
 p {
-  font-size: 1.2rem;
+  font-size: 18pt;
 }
 body {
   margin: 0;
@@ -24,24 +24,36 @@ body {
   font-size: 1rem;
 }
 .content {
-  padding: 50px;
   display: flex;
   flex-wrap: wrap;
+  height: 600px;
+  
+  padding: 50px;
+  align-items: center;
+  justify-content: center;
+  
 }
-.card {
-  background-color: white;
-  box-shadow: 2px 2px 12px 1px rgba(140,140,140,.5);
-  margin: 20px;
-  padding: 20px;
-}
-.card-title {
-  color:#00BFFF;
-  font-weight: bold;
-}
+
 .cards {
   min-width: 400px;
   display: flex;
   flex-direction: column;
+}
+
+.card {
+  background-color: white;
+  box-shadow: 2px 2px 12px 1px rgba(140,140,140,.5);
+  margin: 0 20px;
+  padding: 20px;
+  height: 600px;
+  box-sizing: border-box;
+}
+.card-section {
+  padding: 20px 0;
+}
+.card-title {
+  color:#00BFFF;
+  font-weight: bold;
 }
 .reading {
   font-size: 1.2rem;
@@ -49,10 +61,9 @@ body {
 
 .cube-content{
   width: 600px;
-  background-color: white;
   height: 600px;
-  box-shadow: 2px 2px 12px 1px rgba(140,140,140,.5);
-  box-sizing: border-box;
+  /* padding: 0; */
+  
 }
 
 #reset{
@@ -76,4 +87,23 @@ body {
   font-size: 14px;
   width: 20px;
   border-radius: 4px;
+}
+
+.table td {
+  width: 100px;
+}
+
+thead tr {
+  display: block;
+}
+
+tbody {
+  display:block;
+  overflow:auto;
+  max-height: 250px;
+  width:100%;
+}
+
+table td {
+  padding: 10px;
 }

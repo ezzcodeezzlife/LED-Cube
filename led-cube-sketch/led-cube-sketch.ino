@@ -312,6 +312,7 @@ void loop() {
         // roll the dice
         int randomNumber = random(5) + 1;
         Serial.printf("Random number: %d \n", randomNumber);
+        events.send(String(randomNumber).c_str(),"dice_result", millis());
       }
       
     }
