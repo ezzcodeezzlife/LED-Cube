@@ -19,6 +19,7 @@ function parentHeight(elem) {
 }
 
 function init() {
+  shuffle(players);
   document.getElementById("current-player").innerHTML = players[currentPlayer];
 }
 
@@ -160,4 +161,16 @@ function calibrateAcc(){
 function addDiceResult(currentPlayer, result) {
   let row = "<tr><td>" + players[currentPlayer] + "</td><td>" + result + "</td></tr>";
   document.getElementById("tbody").innerHTML = row + document.getElementById("tbody").innerHTML;
+}
+
+/**
+ * Shuffles array in place. ES6 version
+ * @param {Array} a items An array containing the items.
+ */
+ function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
 }
