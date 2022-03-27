@@ -8,3 +8,6 @@ Für unser Bachelorprojekt haben wir uns im Team überlegt, einen Würfel zu bau
 Den Würfel möchten wir mit einem 3D-Druck selbst herstellen, der Controller befindet sich in dem Würfel und steuert die LEDs an.
 
 ![3d Cube print](https://github.com/ezzcodeezzlife/LED-Cube/blob/main/3DModel/print.PNG?raw=true)
+
+## Schaltplan
+![3d Cube print](https://github.com/ezzcodeezzlife/LED-Cube/blob/main/3DModel/schaltplan.PNG?raw=true)
