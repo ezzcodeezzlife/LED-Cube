@@ -22,41 +22,41 @@
     <h1><i class="fas fa-dice-two"></i> LEDCube <i class="fas fa-dice"></i></h1>
   </div>
   <div class="content">
-    <div class="cards">
-      <div class="card">
-        <div class="card-section">
-          <p class="card-title">GYROSCOPE</p>
-          <p><span class="reading">X: <span id="gyroX"></span> rad | </span>
-            <span class="reading">Y: <span id="gyroY"></span> rad | </span>
-            <span class="reading">Z: <span id="gyroZ"></span> rad</span>
-          </p>
-        </div>
-        <div class="card-section">
-          <p class="card-title">ACCELEROMETER</p>
-          <p>
-            <span class="reading">X: <span id="accX"></span> ms<sup>2</sup> | </span>
-            <span class="reading">Y: <span id="accY"></span> ms<sup>2</sup> | </span>
-            <span class="reading">Z: <span id="accZ"></span> ms<sup>2</sup></span>
-          </p>
-          <p>
-            <span class="reading">Movement: <span id="accMov"></span></span>
-          </p>
-        </div>
-        <div class="card-section">
-          <p class="card-title">3D ANIMATION</p>
-          <button id="reset" onclick="resetPosition(this)">RESET POSITION</button>
-          <button id="reset" onclick="calibrateGyro()">Calibrate gyro</button>
-          <button id="reset" onclick="calibrateAcc()">Calibrate acc</button>
-          <!--<button id="resetX" onclick="resetPosition(this)">X</button>-->
-          <!--<button id="resetY" onclick="resetPosition(this)">Y</button>-->
-          <!--<button id="resetZ" onclick="resetPosition(this)">Z</button>-->
-        </div>
+    <div class="card" id="readings">
+      <div class="card-section">
+        <p class="card-title">GYROSCOPE</p>
+        <p><span class="reading">X: <span id="gyroX"></span> rad | </span>
+          <span class="reading">Y: <span id="gyroY"></span> rad | </span>
+          <span class="reading">Z: <span id="gyroZ"></span> rad</span>
+        </p>
+      </div>
+      <div class="card-section">
+        <p class="card-title">ACCELEROMETER</p>
+        <p>
+          <span class="reading">X: <span id="accX"></span> ms<sup>2</sup> | </span>
+          <span class="reading">Y: <span id="accY"></span> ms<sup>2</sup> | </span>
+          <span class="reading">Z: <span id="accZ"></span> ms<sup>2</sup></span>
+        </p>
+        <p>
+          <span class="reading">Movement: <span id="accMov">no</span></span>
+        </p>
+      </div>
+      <div class="card-section">
+        <p class="card-title">SETTINGS</p>
+        <p>
+          <button id="reset" onclick="resetPosition(this)">Reset Position</button>
+        </p>
+        <!-- <button id="reset" onclick="calibrateGyro()">Calibrate gyro</button>
+        <button id="reset" onclick="calibrateAcc()">Calibrate acc</button> -->
+        <!--<button id="resetX" onclick="resetPosition(this)">X</button>-->
+        <!--<button id="resetY" onclick="resetPosition(this)">Y</button>-->
+        <!--<button id="resetZ" onclick="resetPosition(this)">Z</button>-->
       </div>
     </div>
-    <div class="card cube-content">
+    <div class="card" id="cube-content">
       <div id="3Dcube"></div>
     </div>
-    <div class="card table-content">
+    <div class="card" id="table-content">
       <div class="card-section">
         <p class="card-title">
           Aktueller Spieler:

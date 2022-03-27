@@ -124,7 +124,7 @@ if (!!window.EventSource) {
   source.addEventListener('accelerometer_movement', function(e) {
     console.log("accelerometer_movement", e.data);
     var mov = e.data;
-    document.getElementById("accMov").innerHTML = mov;
+    document.getElementById("accMov").innerHTML = mov == "1"? "yes":"no";
   }, false);
 
   source.addEventListener('dice_result', function(e) {
